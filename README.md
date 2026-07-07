@@ -48,4 +48,30 @@ PROJECT PLAN: AUTOMATED NON-HUMAN IDENTITY HARDENING
      from an unauthorized outside network. Verify that the system instantly detects 
      the variance, generates a high-severity alert, and successfully disables 
      the machine identity automatically.
+
+     * PHASE 6: Monitoring Ingestion Volume
+     We returned to our Command-Line Interface (CLI) terminal to verify if 
+     the background cloud synchronization had finished processing. The system metadata 
+     tables updated from a completely blank baseline to show an active data 
+     quantity of 0.029727 blocks, confirming that the data bridge was officially 
+     transmitting information.
+
+   * PHASE 7: Reading the Row Count
+     We re-executed our table count query inside the Command-Line Interface (CLI) 
+     terminal. The database response successfully climbed from zero records to eight 
+     active records, proving that the cloud system successfully captured and written 
+     live events into the permanent Azure Log Analytics Workspace (LAW) database.
+
+   * PHASE 8: Parsing the Live Security Events
+     We ran an advanced data aggregation query using the Kusto Query Language (KQL) 
+     to break down those eight rows by application type, physical location, and 
+     security status.
+
+   * PHASE 9: Analyzing the Baseline Posture
+     The database output revealed that your active exploration of the administration 
+     screens generated successful authentications. The logs tracked connections 
+     to the Azure Portal, the Microsoft 365 Security and Compliance Center, and 
+     SharePoint Online. Every single login showed a status code of zero, indicating 
+     complete success, and correctly flagged your geographic location as the United 
+     States (US), proving the pipeline is flawlessly capturing clean, uncompromised traffic.
 ================================================================================
