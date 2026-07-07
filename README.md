@@ -115,3 +115,16 @@ Our forensic log analysis configuration is split into two distinct execution lay
 * **Negative Constraints:** The Conditional Access (CA) policy cannot distinguish between a legitimate off-network software developer script and a malicious actor. If a valid automated process attempts to run from an unmapped network route, it will be blocked silently until its source address is manually added to the Named Location table.
 * **The Inverse Logic:** * **Within Perimeter (Success State):** Authenticating from your verified desktop network address triggers the "Exclude" criteria. The policy evaluates as a hard boolean *Success* (Not Applied/Bypassed), allowing the application to authenticate normally.
     * **Outside Perimeter (Failure State):** Authenticating from an external or mobile network fails the "Exclude" check, falling into the catch-all "Include" rule. The policy evaluates as a hard boolean *Failure*, triggering a strict access block and generating an explicit "AADSTS53003" security log event.
+### Project Phase 1 Addendum: Technical Discoveries & Schema Constraints
+
+During the active validation phase of the workload identity perimeter rollout, two critical engineering constraints were discovered and resolved:
+
+#### 1. Ingestion Table Schema Naming Discrepancy
+* **Discovery:** Microsoft Entra ID (MEID) diagnostic telemetry categories alter their explicit table labels upon physical ingestion into Azure Monitor storage systems. 
+* **Mechanism:** While interactive human authentication events are written to the standard `SigninLogs` table expression, non-human machine interactions append a legacy directory prefix. 
+* **Resolution:** All Kusto Query Language (KQL) evaluation queries targeting non-human assets must explicitly query the **`AADServicePrincipalSignInLogs`** table schema. Failure to use this exact name string triggers a `SemanticError (SEM0100)`.
+
+#### 2. Command-Line Session Context Isolation
+* **Discovery:** Executing a Service Principal (SP) login command (`az login --service-principal`) completely replaces the active security token context of the local terminal window.
+* **Mechanism:** The terminal session adopts the limited security token of the non-human machine account. Because this automated asset has zero access permissions on the monitoring database, executing a query from this context results in a hard failure.
+* **Resolution:** Engineers must execute an interactive user login command (`az login`) to restore their primary administrative identity rights before issuing Kusto Query Language (KQL) diagnostic queries to the Log Analytics Workspace (LAW).
